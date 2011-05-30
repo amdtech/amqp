@@ -34,7 +34,7 @@ module AMQP
     end
 
     def length
-      @data.bytesize
+      @data.length
     end
 
     def empty?
@@ -157,13 +157,13 @@ module AMQP
         _write([upper, lower], 'NN')
       when :shortstr
         data = (data || '').to_s
-        _write([data.bytesize, data], 'Ca*')
+        _write([data.length, data], 'Ca*')
       when :longstr
         if data.is_a? Hash
           write(:table, data)
         else
           data = (data || '').to_s
-          _write([data.bytesize, data], 'Na*')
+          _write([data.length, data], 'Na*')
         end
       when :timestamp
         write(:longlong, data.to_i)
@@ -182,7 +182,7 @@ module AMQP
                           when Float
                             table.write(:octet, 68) # 'D'
                             # XXX there's gotta be a better way to do this..
-                            exp = value.to_s.split('.').last.bytesize
+                            exp = value.to_s.split('.').last.length
                             num = value * 10**exp
                             table.write(:octet, exp)
                             table.write(:long, num)
@@ -266,7 +266,7 @@ module AMQP
     def _write(data, pack = nil)
       data = [*data].pack(pack) if pack
       @data[@pos, 0] = data
-      @pos += data.bytesize
+      @pos += data.length
     end
   end
 end

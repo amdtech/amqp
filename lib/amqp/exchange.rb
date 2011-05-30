@@ -318,7 +318,7 @@ module AMQP
         data = data.to_s
 
         out << Protocol::Header.new(Protocol::Basic,
-                                    data.bytesize, { opts[:content_type] || :content_type => "application/octet-stream",
+                                    data.length, { opts[:content_type] || :content_type => "application/octet-stream",
                                                    :delivery_mode => (opts[:persistent] ? 2 : 1),
                                                    :priority => 0 }.merge(opts))
 
